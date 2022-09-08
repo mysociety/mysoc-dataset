@@ -2,6 +2,11 @@
 
 A python package and CLI to download mySociety datasets.
 
+The best example of one of these datasets is: https://mysociety.github.io/uk_local_authority_names_and_codes/
+
+These datasets are versioned [frictionless datapackages](https://frictionlessdata.io/). A repository may contain multiple data packages, each data package may contain multiple versions. A version of a datapackage will contain multiple resources (.csvs) and some composite files made up of resources (.xlsx or .sqlite). 
+
+
 ## Installation
 
 It can be installed with:
@@ -56,9 +61,11 @@ For instance, the following will print the `datapackage.json` that describes the
 
 `mysoc-dataset detail --repo uk_local_authority_names_and_codes --version latest --package uk_la_future`
 
-And the following will get the URL of the resource:
+And the following will get the URL of the resource, pegged to the `1` major version:
 
-`mysoc-dataset url --repo uk_local_authority_names_and_codes --version latest --package uk_la_future --file uk_local_authorities_future.csv`
+`mysoc-dataset url --repo uk_local_authority_names_and_codes --version 1 --package uk_la_future --file uk_local_authorities_future.csv`
+
+If the dataset has had a major change, a warning will indicate this is no longer the latest version - while not introducing breaking changes to headers without the script being changed.
 
 Use `mysoc-dataset --help` for more instructions. 
 
