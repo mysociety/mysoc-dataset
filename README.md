@@ -72,3 +72,7 @@ Use `mysoc-dataset --help` for more instructions.
 If using the CLI for a dataset, please fill out a survey of what you are using it for to help us explain the value of the data to funders. You can get a URL to the survey page using the 'survey' command. 
 
 `mysoc-dataset survey --repo uk_local_authority_names_and_codes --version latest --package uk_la_future --file uk_local_authorities_future.csv`
+
+# Maintenance
+
+If the repo has a valid PYPI_TOKEN secret, and if the poetry version is bumped and all tests pass - the GitHub Action will automatically publish on push to the main branch.
