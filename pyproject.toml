@@ -1,12 +1,12 @@
 [tool.poetry]
-name = "{{cookiecutter.hyphenated}}"
+name = "mysoc-dataset"
 version = "0.1.0"
-description = "{{cookiecutter.description}}"
-authors = ["{{cookiecutter.author_name}} <{{cookiecutter.author_email}}>"]
+description = "Tool to download mySociety datasets"
+authors = ["Alex Parsons <alex.parsons@mysociety.org>"]
 readme = "README.md"
 license = "MIT"
-homepage = "https://github.com/{{cookiecutter.github_id}}"
-repository = "https://github.com/{{cookiecutter.github_id}}"
+homepage = "https://github.com/ajparsons/mysoc-dataset"
+repository = "https://github.com/ajparsons/mysoc-dataset"
 include = [
     "LICENSE.md",
 ]

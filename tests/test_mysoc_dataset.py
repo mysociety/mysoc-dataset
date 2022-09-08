@@ -1,4 +1,4 @@
-import {{cookiecutter.underscored}} as package
+import mysoc_dataset as package
 
 
 def test_true_is_true():
