@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mysoc-dataset"
-version = "0.1.1"
+version = "0.2.0"
 description = "Tool to download mySociety datasets"
 authors = ["Alex Parsons <alex.parsons@mysociety.org>"]
 readme = "README.md"
@@ -10,6 +10,9 @@ repository = "https://github.com/mysociety/mysoc-dataset"
 include = [
     "LICENSE.md",
 ]
+[tool.poetry.group.dev.dependencies]
+httpretty = "^1.1.4"
+
 
 [tool.poetry_bumpversion.file."src/mysoc_dataset/__init__.py"]
 

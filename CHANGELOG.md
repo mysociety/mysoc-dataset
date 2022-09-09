@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [comment]: # (Template for updates)
 
+## [0.2.0] - 2022-09-09
+### Changed
+- Default domain can be changed in data.mysociety.org config file.
+
 ## [0.1.1] - 2022-09-09
 ### Changed
 - Allow pandas versions above 1.3.5 for python versions above 3.8.

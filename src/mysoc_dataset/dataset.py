@@ -1,14 +1,44 @@
+import functools
 import json
 import urllib.error
 import urllib.request
 from dataclasses import dataclass
-from typing import Any, Dict, List
+from datetime import datetime, timedelta
+from typing import Any, Callable, Dict, List
 
 import pandas as pd
 import rich
 
+# URL to consult for public repos and default settings
 PUBLIC_URL_LIST = "https://data.mysociety.org/datarepos.json"
+
+# Default domain to fall back on if lookup to above fails
 DEFAULT_DATAREPO_DOMAIN = "https://mysociety.github.io"
+
+
+def timed_cache(**timedelta_kwargs: Any):
+    """
+    Cache with timedelta timeout
+    """
+
+    def _wrapper(f: Callable[..., Any]):
+        update_delta = timedelta(**timedelta_kwargs)
+        next_update = datetime.utcnow() + update_delta
+        # Apply @lru_cache to f with no cache size limit
+        f = functools.lru_cache(None)(f)
+
+        @functools.wraps(f)
+        def _wrapped(*args: Any, **kwargs: Any):
+            nonlocal next_update
+            now = datetime.utcnow()
+            if now >= next_update:
+                f.cache_clear()
+                next_update = now + update_delta
+            return f(*args, **kwargs)
+
+        return _wrapped
+
+    return _wrapper
 
 
 class RepoNotFound(Exception):
@@ -44,14 +74,53 @@ def valid_url(url: str) -> bool:
     return False
 
 
+@timed_cache(minutes=1)
+def fetch_data_repo(url: str) -> Dict[str, Any]:
+    """
+    retrieve the data.json file from the data repo
+    """
+    try:
+        with urllib.request.urlopen(url) as url_conn:
+            data = json.loads(url_conn.read().decode())
+            return data
+    except urllib.error.HTTPError as exc:
+        raise RepoNotFound(
+            f"Data repo not found: {url}. Available repos: {get_public_datasets()}"
+        ) from exc
+
+
+def uncached_get_datarepos_json() -> Dict[str, Any]:
+    """
+    Retrieve the public URL list - but fail softly and return a {} if nothing found
+    """
+    try:
+        with urllib.request.urlopen(PUBLIC_URL_LIST) as url:
+            data = json.loads(url.read().decode())
+            return data
+    except urllib.error.HTTPError:
+        rich.print(
+            "[red]Could not access the datarepos.json file. Using default configurations[/red]"
+        )
+        return {}
+
+
+# version that is cached for a minute
+get_datarepos_json = timed_cache(minutes=1)(uncached_get_datarepos_json)
+
+
+def get_default_domain() -> str:
+    """
+    Get the default domain for the data repos
+    """
+    return get_datarepos_json().get("default_domain", DEFAULT_DATAREPO_DOMAIN)
+
+
 def get_public_datasets() -> List[str]:
     """
     Fetch the public url list, which is a list of URLs under a "datarepos" key.
     and return this list
     """
-    with urllib.request.urlopen(PUBLIC_URL_LIST) as url:
-        data = json.loads(url.read().decode())
-        return data["datarepos"]
+    return get_datarepos_json().get("datarepos", [])
 
 
 @dataclass
@@ -184,25 +253,12 @@ class DataRepo:
         if valid_url(data_repo_ref):
             self.url = data_repo_ref
         else:
-            self.url = f"{DEFAULT_DATAREPO_DOMAIN}/{data_repo_ref}"
+            self.url = f"{get_default_domain()}/{data_repo_ref}"
 
-        self.data = self._fetch_data()
+        self.data = fetch_data_repo(f"{self.url}/data.json")
         self.packages: Dict[str, Package] = {}
         for slug, package in self.data.items():
             self.packages[slug] = Package.from_data(slug, package)
-
-    def _fetch_data(self):
-        """
-        retrieve the data.json file from the data repo
-        """
-        try:
-            with urllib.request.urlopen(f"{self.url}/data.json") as url:
-                data = json.loads(url.read().decode())
-                return data
-        except urllib.error.HTTPError as exc:
-            raise RepoNotFound(
-                f"Data repo not found: {self.url}. Available repos: {get_public_datasets()}"
-            ) from exc
 
     def list_packages(self) -> List[str]:
         """

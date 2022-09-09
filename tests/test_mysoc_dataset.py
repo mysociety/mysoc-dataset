@@ -1,12 +1,15 @@
 from typing import Any
 
+import httpretty  # type: ignore
 import pytest
 from mysoc_dataset import get_dataset_df, get_dataset_url, get_public_datasets
 from mysoc_dataset.dataset import (
+    PUBLIC_URL_LIST,
     FileNotFound,
     PackageNotFound,
     RepoNotFound,
     VersionNotFound,
+    uncached_get_datarepos_json,
 )
 
 
@@ -143,3 +146,18 @@ def test_dataframe_load_works_ok():
     )
     assert len(df) > 0
     assert "local-authority-code" in df.columns
+
+
+@pytest.fixture
+def disable_external_api_calls():
+    httpretty.enable()
+    yield
+    httpretty.disable()
+
+
+def test_error_message_when_source_cant_be_found(
+    disable_external_api_calls: Any, capsys: Any
+):
+    httpretty.register_uri(httpretty.GET, PUBLIC_URL_LIST, status=404)  # type: ignore
+    uncached_get_datarepos_json()
+    assert "not access the datarepos.json file" in capsys.readouterr().out
