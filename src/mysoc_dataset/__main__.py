@@ -86,7 +86,7 @@ def do_list(
             subtitle="See more options with `--help`",
         )
         for item in items:
-            rich.print(f"[green]{item}[/green]")
+            p.print(f"[green]{item}[/green]")
         p.display()
 
 
