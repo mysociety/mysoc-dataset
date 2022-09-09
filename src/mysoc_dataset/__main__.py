@@ -122,11 +122,13 @@ def survey(
 @click.option("--package", help="Package name")
 @click.option("--version", help="Version name", default="latest")
 @click.option("--file", "filename", help="file name")
+@click.option("--quiet", "quiet", is_flag=True, help="Only print the url")
 def get_url(
     repo: str,
     package: str,
     version: str,
     filename: str,
+    quiet: bool,
 ):
     """
     Retrieve and print the url of a file
@@ -141,7 +143,12 @@ def get_url(
         raise click.ClickException("Must provide file")
 
     data_package_url = get_dataset_url(
-        repo, package, version, filename, done_survey=True
+        repo,
+        package,
+        version,
+        filename,
+        done_survey=quiet,
+        ignore_version_warning=quiet,
     )
     rich.print(data_package_url)
 
