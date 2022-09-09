@@ -7,6 +7,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 [comment]: # (Template for updates)
 
+## [0.2.1] - 2022-09-09
+### Changed
+- Fixed error with rich printing inside panel.
+- Added more obvious quiet switch for cli url option.
+
 ## [0.2.0] - 2022-09-09
 ### Changed
 - Default domain can be changed in data.mysociety.org config file.
