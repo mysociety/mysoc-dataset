@@ -305,6 +305,19 @@ def get_dataset_url(
 ) -> str:
     """
     Get a URL for a specific file in a specific version of a package in a specific data repo.
+
+    Args:
+        repo_name (str): The name of the data repo either the subfolder of the mysociety default domain or a full URL
+        package_name (str): The name of the datapackage in the repo
+        version_name (str): The name of the version - may be a full semvar version, a major or minor version, or 'latest'
+        file_name (str): The name of the file to download that is part of the package (usually a .csv)
+        ignore_version_warning (bool, optional): Ignore the warning if the version is not the latest. Defaults to False.
+        done_survey (bool, optional): Have you completed the survey? Defaults to False. Nagging message displayed if not.
+
+    Returns:
+        str: The URL to download the file from
+
+
     """
     dataset_obj = get_dataset_options(
         repo_name, package_name, version_name, file_name, ignore_version_warning
@@ -326,6 +339,18 @@ def get_dataset_df(
 ) -> pd.DataFrame:
     """
     Get a pandas dataframe for a specific file in a specific version of a package in a specific data repo.
+    Get a URL for a specific file in a specific version of a package in a specific data repo.
+
+    Args:
+        repo_name (str): The name of the data repo either the subfolder of the mysociety default domain or a full URL
+        package_name (str): The name of the datapackage in the repo
+        version_name (str): The name of the version - may be a full semvar version, a major or minor version, or 'latest'
+        file_name (str): The name of the file to download that is part of the package (usually a .csv)
+        ignore_version_warning (bool, optional): Ignore the warning if the version is not the latest. Defaults to False.
+        done_survey (bool, optional): Have you completed the survey? Defaults to False. Nagging message displayed if not.
+
+    Returns:
+        pd.DataFrame: The dataframe of the file
     """
     dataset_url = get_dataset_url(
         repo_name,
