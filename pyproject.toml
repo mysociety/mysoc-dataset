@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "mysoc-dataset"
-version = "0.2.2"
+version = "0.3.0"
 description = "Tool to download mySociety datasets"
 authors = ["Alex Parsons <alex.parsons@mysociety.org>"]
 readme = "README.md"

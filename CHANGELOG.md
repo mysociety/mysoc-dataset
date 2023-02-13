@@ -8,6 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 [comment]: # (Template for updates)
 
 
+## [0.3.0] - 2023-02-13
+### Added
+ - Added support for fetching parquet files.
+
 ## [0.2.2] - 2022-09-12
 ### Changed
  - Added more detailed docstring for main functions.

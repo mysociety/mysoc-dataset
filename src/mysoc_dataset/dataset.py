@@ -360,4 +360,14 @@ def get_dataset_df(
         ignore_version_warning,
         done_survey,
     )
-    return pd.read_csv(dataset_url)  # type:ignore
+    if file_name.endswith(".csv"):
+        return pd.read_csv(dataset_url)  # type:ignore
+    elif file_name.endswith(".parquet"):
+        return pd.read_parquet(dataset_url)
+    else:
+        raise ValueError(
+            f"""
+            File type not supported. Only .csv and .parquet are supported. File {file_name} is not supported. 
+            Use `get_dataset_url` to get the URL for the file."
+            """
+        )
